@@ -24,8 +24,10 @@ func MySQLInit() {
 	if err != nil {
 		panic("sqllink, error=" + err.Error())
 	}
-
-	db.AutoMigrate(&model.User{})
+	err = db.AutoMigrate(model.Modlist...)
+	if err != nil {
+		panic("migrate, error=" + err.Error())
+	}
 	sqlDB, _ := db.DB()
 	sqlDB.SetMaxOpenConns(100)
 	sqlDB.SetMaxIdleConns(20)
