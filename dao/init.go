@@ -1,6 +1,7 @@
 package dao
 
 import (
+	"context"
 	"fmt"
 	"roomino/model"
 	"time"
@@ -8,6 +9,8 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
+
+var _db *gorm.DB
 
 func MySQLInit() {
 
@@ -33,4 +36,8 @@ func MySQLInit() {
 	sqlDB.SetMaxIdleConns(20)
 	sqlDB.SetConnMaxLifetime(time.Second * 30)
 	defer sqlDB.Close()
+}
+func NewDBClient(ctx context.Context) *gorm.DB {
+	db := _db
+	return db.WithContext(ctx)
 }
