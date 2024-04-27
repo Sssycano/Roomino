@@ -27,15 +27,18 @@ func MySQLInit() {
 	if err != nil {
 		panic("sqllink, error=" + err.Error())
 	}
+
+	sqlDB, _ := db.DB()
+	//defer sqlDB.Close()
+	sqlDB.SetMaxOpenConns(100)
+	sqlDB.SetMaxIdleConns(20)
+	sqlDB.SetConnMaxLifetime(time.Second * 30)
+	_db = db
 	err = db.AutoMigrate(model.Modlist...)
 	if err != nil {
 		panic("migrate, error=" + err.Error())
 	}
-	sqlDB, _ := db.DB()
-	sqlDB.SetMaxOpenConns(100)
-	sqlDB.SetMaxIdleConns(20)
-	sqlDB.SetConnMaxLifetime(time.Second * 30)
-	defer sqlDB.Close()
+
 }
 func NewDBClient(ctx context.Context) *gorm.DB {
 	db := _db

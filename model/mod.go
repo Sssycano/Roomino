@@ -1,5 +1,7 @@
 package model
 
+import "golang.org/x/crypto/bcrypt"
+
 //"gorm.io/gorm"
 //"golang.org/x/crypto/bcrypt"
 
@@ -108,4 +110,13 @@ func (PetPolicy) TableName() string {
 }
 func (AmenitiesIn) TableName() string {
 	return "AmenitiesIn"
+}
+
+func (user *Users) SetPassword(password string) error {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 12)
+	if err != nil {
+		return err
+	}
+	user.Passwd = string(bytes)
+	return nil
 }
