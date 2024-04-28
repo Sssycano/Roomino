@@ -7,9 +7,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-//"gorm.io/gorm"
-//"golang.org/x/crypto/bcrypt"
-
 type Users struct {
 	Username  string      `gorm:"primary_key;size:20"`
 	FirstName string      `gorm:"size:20;not null"`

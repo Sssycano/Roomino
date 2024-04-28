@@ -10,22 +10,115 @@ import (
 
 func UnitInfoHandler() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		var req types.UnitInforeq // 读取请求数据
+		var req types.UnitInforeq
 		if err := ctx.ShouldBind(&req); err != nil {
-			ctx.JSON(http.StatusBadRequest, ErrorResponse(err)) // 错误处理
+			ctx.JSON(http.StatusBadRequest, ErrorResponse(err))
 			return
 		}
-
-		// 创建 TaskSrv 服务实例
 		taskSrv := service.GetTaskSrv()
-
-		// 调用服务层获取数据
 		resp, err := taskSrv.GetAvailableUnitsWithPetPolicy(ctx.Request.Context(), &req)
 		if err != nil {
-			ctx.JSON(http.StatusInternalServerError, ErrorResponse(err)) // 错误处理
+			ctx.JSON(http.StatusInternalServerError, ErrorResponse(err))
 			return
 		}
 
+		ctx.JSON(http.StatusOK, resp)
+	}
+}
+
+func UpdatePetHandler() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var req types.UpdatePets
+		if err := ctx.ShouldBind(&req); err != nil {
+			ctx.JSON(http.StatusBadRequest, ErrorResponse(err))
+			return
+		}
+		taskSrv := service.GetTaskSrv()
+		resp, err := taskSrv.UpdatePetInfo(ctx.Request.Context(), &req)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, ErrorResponse(err))
+			return
+		}
+		ctx.JSON(http.StatusOK, resp)
+	}
+}
+
+func CreatePetHandler() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var req types.GetPets
+		if err := ctx.ShouldBind(&req); err != nil {
+			ctx.JSON(http.StatusBadRequest, ErrorResponse(err))
+			return
+		}
+		taskSrv := service.GetTaskSrv()
+		resp, err := taskSrv.CreatePet(ctx.Request.Context(), &req)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, ErrorResponse(err))
+			return
+		}
+		ctx.JSON(http.StatusOK, resp)
+	}
+}
+
+func GetPetHandler() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		taskSrv := service.GetTaskSrv()
+		resp, err := taskSrv.GetPet(ctx.Request.Context())
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, ErrorResponse(err))
+			return
+		}
+
+		ctx.JSON(http.StatusOK, resp)
+	}
+}
+func GetInterestsHandler() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var req types.UnitRentIDReq
+		if err := ctx.ShouldBindQuery(&req); err != nil {
+			ctx.JSON(http.StatusInternalServerError, ErrorResponse(err))
+			return
+		}
+		taskSrv := service.GetTaskSrv()
+		resp, err := taskSrv.GetInterests(ctx.Request.Context(), &req)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, ErrorResponse(err))
+			return
+		}
+		ctx.JSON(http.StatusOK, resp)
+	}
+}
+func CreateInterestsHandler() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var req types.PostInterestReq
+		if err := ctx.ShouldBindJSON(&req); err != nil {
+			ctx.JSON(http.StatusInternalServerError, ErrorResponse(err))
+			return
+		}
+		taskSrv := service.GetTaskSrv()
+		resp, err := taskSrv.CreateInterests(ctx.Request.Context(), &req)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, ErrorResponse(err))
+			return
+		}
+		ctx.JSON(http.StatusOK, resp)
+	}
+}
+
+func GetComplexUnitinfoHandler() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var req types.UnitRentIDReq
+		if err := ctx.ShouldBindQuery(&req); err != nil {
+			ctx.JSON(http.StatusBadRequest, ErrorResponse(err))
+			return
+		}
+
+		taskSrv := service.GetTaskSrv()
+		resp, err := taskSrv.GetComplexUnitinfo(ctx.Request.Context(), &req)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, ErrorResponse(err))
+			return
+		}
 		ctx.JSON(http.StatusOK, resp)
 	}
 }

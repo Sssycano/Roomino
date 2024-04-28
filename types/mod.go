@@ -1,5 +1,7 @@
 package types
 
+import "time"
+
 type UserServiceReq struct {
 	Username  string `json:"username" binding:"required,max=20"`
 	FirstName string `json:"first_name" binding:"omitempty,max=20"`
@@ -17,13 +19,11 @@ type TokenData struct {
 
 type UserResp struct {
 	UserName string `json:"user_name" form:"user_name" example:"FanOne"`
-	//CreateAt int64  `json:"create_at" form:"create_at"`
 }
 
 type UnitInforeq struct {
 	CompanyName  string `json:"company_name" binding:"required,max=20"`
 	BuildingName string `json:"building_name" binding:"required,max=20"`
-	//Username     string `json:"username" binding:"required,max=20"`
 }
 type UnitInfoResp struct {
 	UnitRentID             int    `json:"unit_rent_id" form:"unit_rent_id"`
@@ -31,4 +31,50 @@ type UnitInfoResp struct {
 	SquareFootage          int    `json:"square_footage" form:"square_footage"`
 	AvailableDateForMoveIn string `json:"available_date_for_move_in" form:"available_date_for_move_in" binding:"required"`
 	IsPetAllowed           bool   `json:"is_pet_allowed" form:"is_pet_allowed"`
+}
+
+type UpdatePets struct {
+	CurrentPetName string `json:"current_pet_name" binding:"required,max=50"`
+	CurrentPetType string `json:"current_pet_type" binding:"required,max=20"`
+	NewPetName     string `json:"new_pet_name" binding:"required,max=50"`
+	NewPetType     string `json:"new_pet_type" binding:"required,max=50"`
+	NewPetSize     string `json:"new_pet_size" binding:"required,max=20"`
+}
+type GetPets struct {
+	CurrentPetName string `json:"current_pet_name" binding:"required,max=50"`
+	CurrentPetType string `json:"current_pet_type" binding:"required,max=20"`
+	CurrentPetSize string `json:"current_pet_size" binding:"required,max=20"`
+}
+type InterestResp struct {
+	Username    string    `json:"username"`
+	UnitRentID  int       `json:"unit_rent_id"`
+	RoommateCnt uint8     `json:"roommate_cnt"`
+	MoveInDate  time.Time `json:"move_in_date"`
+}
+type UnitRentIDReq struct {
+	UnitRentID int `json:"unit_rent_id" form:"unit_rent_id"`
+}
+type PostInterestReq struct {
+	UnitRentID  int       `json:"unit_rent_id"`
+	RoommateCnt uint8     `json:"roommate_cnt"`
+	MoveInDate  time.Time `json:"move_in_date"`
+}
+
+type ComplexUnitinfo struct {
+	CompanyName       string   `json:"company_name" binding:"required"`
+	BuildingName      string   `json:"building_name" binding:"required"`
+	Address           string   `json:"address"`
+	YearBuilt         int      `json:"year_built" binding:"required"`
+	Amenitiesinbuding []string `json:"amenities_building"`
+	Amenitiesinunit   []string `json:"amenities_unit"`
+	AvailableUnits    int      `json:"available_units"`
+
+	UnitRentID             int       `json:"unit_rent_id"`
+	MonthlyRent            int       `json:"monthly_rent" binding:"required"`
+	SquareFootage          int       `json:"square_footage"`
+	AvailableDateForMoveIn time.Time `json:"available_date_for_move_in"`
+
+	BedroomNum    int `json:"bedroom_num"`
+	BathroomNum   int `json:"bathroom_num"`
+	LivingRoomNum int `json:"living_room_num"`
 }

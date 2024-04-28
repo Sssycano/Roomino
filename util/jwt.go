@@ -10,7 +10,6 @@ import (
 var jwtSecret = []byte(os.Getenv("JWT_SECRET"))
 
 type Claims struct {
-	//Id        uint   `json:"id"`
 	Username  string `json:"username"`
 	Authority int    `json:"authority"`
 	jwt.StandardClaims
@@ -20,7 +19,6 @@ func GenerateToken(username string, authority int) (string, error) {
 	nowTime := time.Now()
 	expireTime := nowTime.Add(24 * time.Hour)
 	claims := Claims{
-		//Id:        id,
 		Username:  username,
 		Authority: authority,
 		StandardClaims: jwt.StandardClaims{

@@ -18,7 +18,6 @@ func NewRouter() *gin.Engine {
 	r.Use(sessions.Sessions("mysession", store))
 	r.Use(middleware.Cors())
 
-	// 定义顶级路由组
 	v1 := r.Group("")
 	{
 		v1.GET("ping", func(c *gin.Context) {
@@ -28,10 +27,15 @@ func NewRouter() *gin.Engine {
 		v1.POST("register", api.UserRegisterHandler())
 		v1.POST("login", api.UserLoginHandler())
 
-		// 使用 JWT 中间件保护子组
-		authed := v1.Group("", middleware.JWT()) // 确保 JWT 中间件应用到子组
+		authed := v1.Group("", middleware.JWT())
 		{
-			authed.POST("profile/unitinfo", api.UnitInfoHandler()) // 在受保护的组中添加路由
+			authed.POST("profile/unitinfo", api.UnitInfoHandler())
+			authed.POST("profile/petupdate", api.UpdatePetHandler())
+			authed.GET("profile/petupdate", api.GetPetHandler())
+			authed.POST("profile/petregister", api.CreatePetHandler())
+			authed.GET("profile/interests", api.GetInterestsHandler())
+			authed.POST("profile/interests", api.CreateInterestsHandler())
+			authed.GET("profile/complexunitinfo", api.GetComplexUnitinfoHandler())
 		}
 	}
 

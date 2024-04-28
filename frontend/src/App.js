@@ -4,11 +4,13 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
 import AuthService from "./services/auth.service";
-
+import UnitInfo from "./components/UnitInfo"; 
+import UpdatePet from "./components/UpdatePet"; 
+import RegisterPet from "./components/RegisterPet";
 import Login from "./components/Login";
+import Interests from "./components/Interests";
 import Register from "./components/Register";
 import Profile from "./components/Profile";
-
 import EventBus from "./common/EventBus";
 
 const App = () => {
@@ -39,7 +41,7 @@ const App = () => {
     <div>
       <nav className="navbar navbar-expand navbar-dark bg-dark">
         <Link to={"/"} className="navbar-brand">
-          Cookzilla
+          Roomino
         </Link>
         <div className="navbar-nav mr-auto">
           <li className="nav-item">
@@ -81,13 +83,16 @@ const App = () => {
 
       <div className="container mt-3">
         <Routes>
-          <Route path="/" element={<Login />}/>
-          <Route path="/login" element={<Login />}/>
-          <Route path="/register" element={<Register />}/>
-          <Route path="/profile" element={<Profile/>} />
+          <Route path="/" element={<Login />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/unitinfo" element={<UnitInfo />} /> 
+          <Route path="/profile/updatepet" element={<UpdatePet />} /> 
+          <Route path="/profile/registerpet" element={<RegisterPet />} /> 
+          <Route path="/profile/interests" element={<Interests />} /> 
         </Routes>
       </div>
-
     </div>
   );
 };

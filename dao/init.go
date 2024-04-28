@@ -29,7 +29,6 @@ func MySQLInit() {
 	}
 
 	sqlDB, _ := db.DB()
-	//defer sqlDB.Close()
 	sqlDB.SetMaxOpenConns(100)
 	sqlDB.SetMaxIdleConns(20)
 	sqlDB.SetConnMaxLifetime(time.Second * 30)
