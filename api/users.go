@@ -30,6 +30,25 @@ func UserRegisterHandler() gin.HandlerFunc {
 
 	}
 }
+
+func UserLoginHandler() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var req types.UserServiceReq
+		if err := ctx.ShouldBind(&req); err == nil {
+			l := service.GetUserSrv()
+			resp, err := l.Login(ctx.Request.Context(), &req)
+			if err != nil {
+				ctx.JSON(http.StatusInternalServerError, ErrorResponse(err))
+				return
+			}
+			ctx.JSON(http.StatusOK, resp)
+		} else {
+			ctx.JSON(http.StatusBadRequest, ErrorResponse(err))
+		}
+
+	}
+}
+
 func ErrorResponse(err error) *ctl.TrackedErrorResponse {
 	if ve, ok := err.(validator.ValidationErrors); ok {
 		for _, fieldError := range ve {

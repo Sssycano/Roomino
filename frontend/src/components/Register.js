@@ -84,7 +84,6 @@ const Register = () => {
             setMessage(resMessage);
           }
           setSuccessful(false);
-          //setMessage(resMessage);
         }
       );
     }

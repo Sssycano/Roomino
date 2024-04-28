@@ -10,7 +10,7 @@ type key int
 var userKey key
 
 type UserInfo struct {
-	Id uint `json:"id"`
+	UserName string `json:"user_name" `
 }
 
 func GetUserInfo(ctx context.Context) (*UserInfo, error) {

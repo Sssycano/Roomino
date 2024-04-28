@@ -47,19 +47,25 @@ const Login = () => {
 
     if (checkBtn.current.context._errors.length === 0) {
       AuthService.login(username, password).then(
-        () => {
+        (response) => {
+          const { data: { token } } = response;
+          localStorage.setItem("user", JSON.stringify(response.data.user));
+          localStorage.setItem("token", token);
           navigate("/profile");
           window.location.reload();
         },
         (error) => {
-          const resMessage =
-          (error.response &&
-            error.response.data &&
-            error.response.data.error &&
-            error.response.data.error.info) ||
-            error.message ||
-            error.toString();
-
+          let resMessage = error.message || error.toString();
+          if (error.response && error.response.data && error.response.data.error) {
+            const errorCode = error.response.data.error;
+            switch (errorCode) {
+              case "WrongPassword":
+                resMessage = "Wrong Password";
+                break;
+              default:
+                resMessage = errorCode;
+            }
+          }
           setLoading(false);
           setMessage(resMessage);
         }

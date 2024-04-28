@@ -2,10 +2,10 @@ import axios from "axios";
 
 const API_URL = "http://localhost:3000/";
 
-const register = (username, password, first_name, last_name, email, phone, dob, gender) => {
+const register = (username, Passwd, first_name, last_name, email, phone, dob, gender) => {
   return axios.post(API_URL + "register", {
     username,
-    password,
+    Passwd,
     first_name,
     last_name,
     email,
@@ -17,11 +17,11 @@ const register = (username, password, first_name, last_name, email, phone, dob, 
 };
 
 
-const login = (userName, password) => {
+const login = (Username, Passwd) => {
   return axios
     .post(API_URL + "login", {
-      userName,
-      password,
+      Username,
+      Passwd,
     })
     .then((response) => {
       if (response.data.token) {
@@ -34,12 +34,18 @@ const login = (userName, password) => {
 
 const logout = () => {
   localStorage.removeItem("user");
+  localStorage.removeItem("token");
 };
 
 const getCurrentUser = () => {
-  return JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(localStorage.getItem("user"));
+  const token = localStorage.getItem("token");
+  if (user && token) {
+    return { ...user, token };
+  } else {
+    return null;
+  }
 };
-
 const AuthService = {
   register,
   login,

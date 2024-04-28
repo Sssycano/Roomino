@@ -7,6 +7,7 @@ import (
 	"roomino/dao"
 	"roomino/model"
 	"roomino/types"
+	"roomino/util"
 	"sync"
 
 	"gorm.io/gorm"
@@ -55,4 +56,29 @@ func (s *UserSrv) Register(ctx context.Context, req *types.UserServiceReq) (resp
 	default:
 		return
 	}
+}
+
+func (s *UserSrv) Login(ctx context.Context, req *types.UserServiceReq) (resp interface{}, err error) {
+	userDao := dao.NewUserDao(ctx)
+	user, err := userDao.FindUserByUserName(req.Username)
+	if err == gorm.ErrRecordNotFound {
+		err = errors.New("UsernotExist")
+		return
+	}
+	if !user.CheckPassword(req.Passwd) {
+		err = errors.New("WrongPassword")
+		return
+	}
+	token, err := util.GenerateToken(req.Username, 0)
+	if err != nil {
+		return
+	}
+	u := &types.UserResp{
+		UserName: user.Username,
+	}
+	uResp := &types.TokenData{
+		User:  u,
+		Token: token,
+	}
+	return ctl.RespSuccessWithData(uResp), nil
 }

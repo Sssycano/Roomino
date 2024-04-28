@@ -10,4 +10,5 @@ var Modlist = []interface{}{
 	&Amenities{},
 	&AmenitiesIn{},
 	&Provides{},
+	&Interests{},
 }

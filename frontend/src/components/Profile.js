@@ -17,14 +17,13 @@ const Profile = () => {
         </h3>
       </header>
       <p>
-        <strong>Token:</strong> {currentUser.token.substring(0, 20)} ...{" "}
-        {currentUser.token.substr(currentUser.token.length - 20)}
+        <strong>Token:</strong> {currentUser.token ? `${currentUser.token.substring(0, 20)} ... ${currentUser.token.substr(currentUser.token.length - 20)}` : 'No token available'}
       </p>
       <p>
-        <strong>userName: </strong> {currentUser.userName}
+        <strong>userName: </strong> {currentUser.user_name ? currentUser.user_name : 'No username available'}
       </p>
       <p>
-        <strong>Email: </strong> {currentUser.email}
+        <strong>Email: </strong> {currentUser.email ? currentUser.email : 'No email available'}
       </p>
     </div>
   );

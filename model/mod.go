@@ -1,20 +1,26 @@
 package model
 
-import "golang.org/x/crypto/bcrypt"
+import (
+	"fmt"
+	"time"
+
+	"golang.org/x/crypto/bcrypt"
+)
 
 //"gorm.io/gorm"
 //"golang.org/x/crypto/bcrypt"
 
 type Users struct {
-	Username  string `gorm:"primary_key;size:20"`
-	FirstName string `gorm:"size:20;not null"`
-	LastName  string `gorm:"size:20;not null"`
-	DOB       string `gorm:"size:20;not null"`
-	Gender    int    `gorm:"type:tinyint;not null"`
-	Email     string `gorm:"size:50"`
-	Phone     string `gorm:"size:20"`
-	Passwd    string `gorm:"size:200"`
-	Pets      []Pets `gorm:"foreignKey:Username"`
+	Username  string      `gorm:"primary_key;size:20"`
+	FirstName string      `gorm:"size:20;not null"`
+	LastName  string      `gorm:"size:20;not null"`
+	DOB       string      `gorm:"size:20;not null"`
+	Gender    int         `gorm:"type:tinyint;not null"`
+	Email     string      `gorm:"size:50"`
+	Phone     string      `gorm:"size:20"`
+	Passwd    string      `gorm:"size:200"`
+	Pets      []Pets      `gorm:"foreignKey:Username"`
+	Interests []Interests `gorm:"foreignKey:Username"`
 }
 
 type Pets struct {
@@ -47,6 +53,14 @@ type ApartmentUnit struct {
 	AvailableDateForMoveIn string        `gorm:"type:date;not null"`
 	Rooms                  []Rooms       `gorm:"foreignKey:UnitRentID"`
 	AmenitiesIn            []AmenitiesIn `gorm:"foreignKey:UnitRentID"`
+	Interests              []Interests   `gorm:"foreignKey:UnitRentID"`
+}
+
+type Interests struct {
+	Username    string    `gorm:"primaryKey;size:20;not null"`
+	UnitRentID  int       `gorm:"primaryKey;not null"`
+	RoommateCnt uint8     `gorm:"type:tinyint;not null"`
+	MoveInDate  time.Time `gorm:"type:date;not null"`
 }
 type Rooms struct {
 	Name          string `gorm:"size:20;not null;primaryKey"`
@@ -99,6 +113,9 @@ func (Amenities) TableName() string {
 func (Provides) TableName() string {
 	return "Provides"
 }
+func (Interests) TableName() string {
+	return "Interests"
+}
 func (ApartmentBuilding) TableName() string {
 	return "ApartmentBuilding"
 }
@@ -112,11 +129,25 @@ func (AmenitiesIn) TableName() string {
 	return "AmenitiesIn"
 }
 
+const (
+	PassWordCost = 12
+)
+
 func (user *Users) SetPassword(password string) error {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 12)
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), PassWordCost)
 	if err != nil {
 		return err
 	}
 	user.Passwd = string(bytes)
 	return nil
+}
+
+func (user *Users) CheckPassword(password string) bool {
+
+	err := bcrypt.CompareHashAndPassword([]byte(user.Passwd), []byte(password))
+	if err != nil {
+		fmt.Println("Password comparison failed:", err)
+	}
+
+	return err == nil
 }

@@ -17,26 +17,23 @@ func NewRouter() *gin.Engine {
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	r.Use(sessions.Sessions("mysession", store))
 	r.Use(middleware.Cors())
+
+	// 定义顶级路由组
 	v1 := r.Group("")
 	{
 		v1.GET("ping", func(c *gin.Context) {
-			c.JSON(200, "success")
+			c.JSON(200, gin.H{"status": "success"})
 		})
 
 		v1.POST("register", api.UserRegisterHandler())
-		//v1.POST("user/login", api.UserLoginHandler())
-		//authed := v1.Group("/")
-		/*authed.Use(middleware.JWT())
+		v1.POST("login", api.UserLoginHandler())
+
+		// 使用 JWT 中间件保护子组
+		authed := v1.Group("", middleware.JWT()) // 确保 JWT 中间件应用到子组
 		{
-
-			authed.POST("task_create", api.CreateTaskHandler())
-			authed.GET("task_list", api.ListTaskHandler())
-			authed.GET("task_show", api.ShowTaskHandler())
-			authed.POST("task_update", api.UpdateTaskHandler())
-			authed.POST("task_search", api.SearchTaskHandler())
-			authed.POST("task_delete", api.DeleteTaskHandler())
-
-		}*/
+			authed.POST("profile/unitinfo", api.UnitInfoHandler()) // 在受保护的组中添加路由
+		}
 	}
+
 	return r
 }
