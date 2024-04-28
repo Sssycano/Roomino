@@ -193,3 +193,31 @@ func (s *TaskSrv) GetComplexUnitinfo(ctx context.Context, req *types.UnitRentIDR
 
 	return ctl.RespSuccessWithData(complexInfo), nil
 }
+
+func (s *TaskSrv) SearchInterestswithcond(ctx context.Context, req *types.InteresCondReq) (interface{}, error) {
+	taskDao := dao.NewTaskDao(ctx)
+	var moveInDate *types.CustomTime
+	if !req.MoveInDate.IsZero() {
+		moveInDate = &req.MoveInDate
+	}
+
+	var roommateCnt *uint8
+	if req.RoommateCnt != 0 {
+		roommateCnt = &req.RoommateCnt
+	}
+
+	interests, err := taskDao.SearchInterestswithcond(req.UnitRentID, moveInDate, roommateCnt)
+	if err != nil {
+		return nil, errors.New("failed to search interests")
+	}
+	var interestsResp []types.InterestResp
+	for _, interest := range interests {
+		interestsResp = append(interestsResp, types.InterestResp{
+			Username:    interest.Username,
+			UnitRentID:  interest.UnitRentID,
+			RoommateCnt: interest.RoommateCnt,
+			MoveInDate:  interest.MoveInDate,
+		})
+	}
+	return ctl.RespSuccessWithData(interestsResp), nil
+}

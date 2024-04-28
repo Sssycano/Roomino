@@ -4,7 +4,12 @@ import authHeader from "./auth-header";
 const API_URL = "http://localhost:3000/";
 
 const getUserBoard = () => {
-  return axios.get(API_URL + "user", { headers: authHeader() });
+  return axios.get(API_URL + "profile", { headers: authHeader() })  .then(response => {
+    return response.data;
+  })
+  .catch(error => {
+    throw error;
+  });
 };
 
 const getpet = () => {
@@ -56,6 +61,15 @@ const searchUnits = (company_name, building_name) => {
     });
 };
 
+const searchInterests = (unit_rent_id, roommate_cnt,move_in_date) => {
+  return axios.post(API_URL+"profile/searchinterests", { unit_rent_id, roommate_cnt,move_in_date }, { headers: authHeader() })
+    .then(response => {
+      return response.data;
+    })
+    .catch(error => {
+      throw error;
+    });
+};
 
 const UserService = {
   updatepet,
@@ -66,6 +80,7 @@ const UserService = {
   getinterests,
   createinterests,
   getcomplexunitinfo,
+  searchInterests,
 };
 
 export default UserService;

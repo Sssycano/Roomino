@@ -82,3 +82,28 @@ func (s *UserSrv) Login(ctx context.Context, req *types.UserServiceReq) (resp in
 	}
 	return ctl.RespSuccessWithData(uResp), nil
 }
+
+func (s *UserSrv) GetUserProfile(ctx context.Context) (interface{}, error) {
+	u, err := ctl.GetUserInfo(ctx)
+	if err != nil {
+		return nil, errors.New("failed to get user info")
+	}
+	userDao := dao.NewUserDao(ctx)
+	user, err := userDao.FindUserByUserName(u.UserName)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("user not found")
+		}
+		return nil, errors.New("failed to retrieve user info")
+	}
+	userProfile := types.UserProfile{
+		Username:  user.Username,
+		FirstName: user.FirstName,
+		LastName:  user.LastName,
+		DOB:       user.DOB,
+		Gender:    user.Gender,
+		Email:     user.Email,
+		Phone:     user.Phone,
+	}
+	return ctl.RespSuccessWithData(userProfile), nil
+}

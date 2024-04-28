@@ -62,3 +62,15 @@ func ErrorResponse(err error) *ctl.TrackedErrorResponse {
 	}
 	return ctl.RespError(err, "Invalid parameters", e.InvalidParams)
 }
+
+func GetUserProfileHandler() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		userSrv := service.GetUserSrv()
+		resp, err := userSrv.GetUserProfile(ctx.Request.Context())
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		ctx.JSON(http.StatusOK, resp)
+	}
+}

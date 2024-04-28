@@ -3,10 +3,12 @@ package dao
 import (
 	"context"
 	"errors"
+	"fmt"
 	"regexp"
 	"roomino/model"
 	"roomino/types"
 	"strings"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -238,4 +240,35 @@ func (dao *TaskDao) GetRoomCountsByUnitRentID(unitRentID int) (int, int, int, er
 	}
 
 	return bedroomCount, bathroomCount, livingRoomCount, nil
+}
+
+func (dao *TaskDao) SearchInterestswithcond(unitRentID int, moveInDate *types.CustomTime, roommateCnt *uint8) ([]model.Interests, error) {
+	var interests []model.Interests
+	dbLocation, err := time.LoadLocation("America/New_York")
+	if err != nil {
+		return nil, err
+	}
+	var moveInDateValue *time.Time
+	if moveInDate != nil {
+		dateStr := moveInDate.Time.Format("2006-01-02")
+		parsedTime, err := time.ParseInLocation("2006-01-02", dateStr, dbLocation)
+		if err != nil {
+			return nil, err
+		}
+		moveInDateValue = &parsedTime
+	}
+
+	fmt.Println("move_in_date = ", moveInDateValue)
+	query := dao.DB.Where("unit_rent_id = ?", unitRentID)
+	if moveInDate != nil {
+		query = query.Where("move_in_date = ?", *moveInDateValue)
+	}
+	if roommateCnt != nil {
+		query = query.Where("roommate_cnt = ?", *roommateCnt)
+	}
+
+	if err := query.Find(&interests).Error; err != nil {
+		return nil, err
+	}
+	return interests, nil
 }

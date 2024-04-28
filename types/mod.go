@@ -1,6 +1,9 @@
 package types
 
-import "time"
+import (
+	"errors"
+	"time"
+)
 
 type UserServiceReq struct {
 	Username  string `json:"username" binding:"required,max=20"`
@@ -77,4 +80,39 @@ type ComplexUnitinfo struct {
 	BedroomNum    int `json:"bedroom_num"`
 	BathroomNum   int `json:"bathroom_num"`
 	LivingRoomNum int `json:"living_room_num"`
+}
+
+type UserProfile struct {
+	Username  string `json:"username"`
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+	DOB       string `json:"dob"`
+	Gender    int    `json:"gender"`
+	Email     string `json:"email"`
+	Phone     string `json:"phone"`
+}
+
+type CustomTime struct {
+	time.Time
+}
+
+func (t *CustomTime) UnmarshalJSON(data []byte) error {
+	str := string(data)
+	str = str[1 : len(str)-1]
+	parsedTime, err := time.Parse("2006-01-02", str)
+	if err != nil {
+		return errors.New("invalid date format")
+	}
+	t.Time = parsedTime
+	return nil
+}
+
+func (t CustomTime) ToTime() time.Time {
+	return t.Time
+}
+
+type InteresCondReq struct {
+	UnitRentID  int        `json:"unit_rent_id"`
+	RoommateCnt uint8      `json:"roommate_cnt" binding:"omitempty"`
+	MoveInDate  CustomTime `json:"move_in_date" binding:"omitempty"`
 }

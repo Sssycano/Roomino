@@ -11,6 +11,7 @@ import Login from "./components/Login";
 import Interests from "./components/Interests";
 import Register from "./components/Register";
 import Profile from "./components/Profile";
+import SearchInterests from "./components/SearchInterests";
 import EventBus from "./common/EventBus";
 
 const App = () => {
@@ -91,6 +92,7 @@ const App = () => {
           <Route path="/profile/updatepet" element={<UpdatePet />} /> 
           <Route path="/profile/registerpet" element={<RegisterPet />} /> 
           <Route path="/profile/interests" element={<Interests />} /> 
+          <Route path="/profile/searchinterests" element={<SearchInterests />} /> 
         </Routes>
       </div>
     </div>

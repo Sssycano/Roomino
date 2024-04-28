@@ -122,3 +122,20 @@ func GetComplexUnitinfoHandler() gin.HandlerFunc {
 		ctx.JSON(http.StatusOK, resp)
 	}
 }
+
+func SearchInterestswithcondHandler() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var req types.InteresCondReq
+		if err := ctx.ShouldBindJSON(&req); err != nil {
+			ctx.JSON(http.StatusInternalServerError, ErrorResponse(err))
+			return
+		}
+		taskSrv := service.GetTaskSrv()
+		resp, err := taskSrv.SearchInterestswithcond(ctx.Request.Context(), &req)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, ErrorResponse(err))
+			return
+		}
+		ctx.JSON(http.StatusOK, resp)
+	}
+}

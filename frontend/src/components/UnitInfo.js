@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Form from 'react-validation/build/form';
 import Input from 'react-validation/build/input';
 import Button from 'react-validation/build/button';
-import { Link } from 'react-router-dom'; // 导入Link组件
+import { Link } from 'react-router-dom'; 
 import UserService from '../services/user.service';
 
 const UnitInfo = () => {

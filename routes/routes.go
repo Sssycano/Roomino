@@ -29,6 +29,7 @@ func NewRouter() *gin.Engine {
 
 		authed := v1.Group("", middleware.JWT())
 		{
+			authed.GET("profile", api.GetUserProfileHandler())
 			authed.POST("profile/unitinfo", api.UnitInfoHandler())
 			authed.POST("profile/petupdate", api.UpdatePetHandler())
 			authed.GET("profile/petupdate", api.GetPetHandler())
@@ -36,6 +37,7 @@ func NewRouter() *gin.Engine {
 			authed.GET("profile/interests", api.GetInterestsHandler())
 			authed.POST("profile/interests", api.CreateInterestsHandler())
 			authed.GET("profile/complexunitinfo", api.GetComplexUnitinfoHandler())
+			authed.POST("profile/searchinterests", api.SearchInterestswithcondHandler())
 		}
 	}
 
